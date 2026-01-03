@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Coverage
+coverage/
+
+# Environment files with secrets
+.env
+.env.local.user
+.env.dev.user
+.env.*.user
+.localConfigs
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Teams Toolkit
+build/
+.deployment/
+devTools/
+
+# Azure Functions
+bin/
+obj/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
+*.lcov

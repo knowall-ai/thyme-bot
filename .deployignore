@@ -1,0 +1,19 @@
+# Ignore for deployment
+.vscode/
+.github/
+tests/
+coverage/
+*.md
+*.log
+.eslintrc.json
+jest.config.js
+tsconfig.json
+.gitignore
+env/
+appPackage/
+infra/
+functions/
+tabs/
+src/
+*.ts
+!dist/**

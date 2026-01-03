@@ -1,0 +1,38 @@
+{
+  "id": "${{AAD_APP_OBJECT_ID}}",
+  "appId": "${{AAD_APP_CLIENT_ID}}",
+  "name": "Thyme-${{TEAMSFX_ENV}}",
+  "accessTokenAcceptedVersion": 2,
+  "signInAudience": "AzureADMyOrg",
+  "optionalClaims": {
+    "idToken": [],
+    "accessToken": [
+      {
+        "name": "idtyp",
+        "essential": false,
+        "additionalProperties": []
+      }
+    ],
+    "saml2Token": []
+  },
+  "requiredResourceAccess": [
+    {
+      "resourceAppId": "Microsoft Graph",
+      "resourceAccess": [
+        {
+          "id": "User.Read",
+          "type": "Scope"
+        }
+      ]
+    }
+  ],
+  "oauth2Permissions": [],
+  "preAuthorizedApplications": [],
+  "identifierUris": [],
+  "replyUrlsWithType": [
+    {
+      "url": "https://${{BOT_DOMAIN}}/auth-end.html",
+      "type": "Web"
+    }
+  ]
+}
