@@ -85,11 +85,16 @@ jobs:
 
       - name: Prepare functions deployment
         run: |
-          mkdir -p functions-deploy
-          cp -r functions/dist functions-deploy/
+          mkdir -p functions-deploy/dailyReminder
+          # Copy compiled JS to function folder (alongside function.json)
+          cp functions/dist/dailyReminder/*.js functions-deploy/dailyReminder/
+          cp functions/dist/dailyReminder/*.js.map functions-deploy/dailyReminder/ 2>/dev/null || true
+          # Copy function.json
+          cp functions/dailyReminder/function.json functions-deploy/dailyReminder/
+          # Copy host.json and package files
           cp functions/host.json functions-deploy/
           cp functions/package.json functions-deploy/
-          cp -r functions/dailyReminder functions-deploy/ 2>/dev/null || true
+          # Install production dependencies
           cd functions-deploy && npm install --omit=dev
 
       - name: Upload functions artifact
