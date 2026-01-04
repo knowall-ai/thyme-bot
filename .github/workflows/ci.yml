@@ -44,11 +44,13 @@ jobs:
         run: npm run build
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: matrix.node-version == '20.x'
         with:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   validate-manifest:
     name: Validate Teams Manifest

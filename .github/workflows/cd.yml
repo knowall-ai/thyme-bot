@@ -44,15 +44,18 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Prepare deployment package
+        run: |
+          mkdir -p deploy
+          cp -r dist deploy/
+          cp package.json package-lock.json web.config deploy/
+          cd deploy && npm ci --omit=dev
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-build
-          path: |
-            dist/
-            package.json
-            package-lock.json
-            web.config
+          path: deploy/
           retention-days: 1
 
   build-functions:
@@ -68,25 +71,32 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
-          cache-dependency-path: functions/package-lock.json
+
+      - name: Install main dependencies (for shared code)
+        run: npm ci
 
       - name: Install function dependencies
         working-directory: functions
-        run: npm ci
+        run: npm install
 
       - name: Build functions
         working-directory: functions
         run: npm run build
 
+      - name: Prepare functions deployment
+        run: |
+          mkdir -p functions-deploy
+          cp -r functions/dist functions-deploy/
+          cp functions/host.json functions-deploy/
+          cp functions/package.json functions-deploy/
+          cp -r functions/dailyReminder functions-deploy/ 2>/dev/null || true
+          cd functions-deploy && npm install --omit=dev
+
       - name: Upload functions artifact
         uses: actions/upload-artifact@v4
         with:
           name: functions-build
-          path: |
-            functions/dist/
-            functions/host.json
-            functions/package.json
-            functions/package-lock.json
+          path: functions-deploy/
           retention-days: 1
 
   deploy-dev:
@@ -112,12 +122,12 @@ jobs:
           path: ./functions
 
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}-dev
           package: ./app
@@ -151,12 +161,12 @@ jobs:
           path: ./functions
 
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ./app
