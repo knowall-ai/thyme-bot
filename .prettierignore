@@ -1,0 +1,7 @@
+node_modules
+dist
+coverage
+*.png
+*.ico
+appPackage/build
+.localConfigs

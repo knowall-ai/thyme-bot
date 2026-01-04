@@ -50,8 +50,13 @@ export class ReminderService {
       const userTime = DateTime.now().setZone(subscription.timezone);
       const [targetHour, targetMinute] = subscription.reminderTime.split(":").map(Number);
 
-      // Check if user's current time is within the target hour
-      if (userTime.hour === targetHour && userTime.minute >= targetMinute && userTime.minute < targetMinute + 60) {
+      // Check if user's current time is at the target hour and within a 15-minute window
+      // This prevents duplicate reminders while allowing for some flexibility
+      if (
+        userTime.hour === targetHour &&
+        userTime.minute >= targetMinute &&
+        userTime.minute < targetMinute + 15
+      ) {
         matchingSubscriptions.push(subscription);
       }
     }

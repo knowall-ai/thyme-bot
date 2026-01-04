@@ -12,7 +12,12 @@ coverage/
 .env.local.user
 .env.dev.user
 .env.*.user
+env/.env.*.user
+env/*.user
 .localConfigs
+
+# Local settings for Azure Functions
+functions/local.settings.json
 
 # IDE
 .idea/
