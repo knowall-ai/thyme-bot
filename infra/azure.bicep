@@ -1,4 +1,6 @@
 @description('The name suffix for all resources')
+@minLength(3)
+@maxLength(17) // Ensures storage account name (resourceBaseName + 'storage') stays under 24 chars
 param resourceBaseName string
 
 @description('The Azure region for all resources')
@@ -18,8 +20,11 @@ param thymeAppUrl string = 'https://thyme.knowall.ai'
 param thymeApiUrl string = 'https://thyme.knowall.ai/api'
 
 // Storage Account for subscriptions
+// Name must be 3-24 chars, lowercase alphanumeric only
+var storageAccountName = take(toLower(replace('${resourceBaseName}storage', '-', '')), 24)
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
-  name: toLower(replace('${resourceBaseName}storage', '-', ''))
+  name: storageAccountName
   location: location
   sku: {
     name: 'Standard_LRS'
