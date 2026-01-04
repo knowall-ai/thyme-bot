@@ -139,7 +139,9 @@ export class ThymeBot extends TeamsActivityHandler {
 
     // Validate time
     if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      await context.sendActivity("That doesn't seem like a valid time. Please use a format like `remind me at 5pm`.");
+      await context.sendActivity(
+        "That doesn't seem like a valid time. Please use a format like `remind me at 5pm`."
+      );
       return;
     }
 
@@ -156,7 +158,11 @@ export class ThymeBot extends TeamsActivityHandler {
 
     // Update subscription with custom time
     const conversationReference = TurnContext.getConversationReference(context.activity);
-    await this.subscriptionStore.updateReminderTime(userId, formattedTime, conversationReference as ConversationReference);
+    await this.subscriptionStore.updateReminderTime(
+      userId,
+      formattedTime,
+      conversationReference as ConversationReference
+    );
 
     await context.sendActivity(
       `Got it! I'll remind you at **${formattedTime}** each day to fill in your timesheet.`

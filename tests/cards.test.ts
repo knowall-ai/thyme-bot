@@ -73,9 +73,7 @@ describe("Adaptive Cards", () => {
     it("should show hours when hours are logged", () => {
       const card = createReminderCard({ hoursToday: 6.5 });
       const textBlocks = card.body.filter((item: { type: string }) => item.type === "TextBlock");
-      const hoursText = textBlocks.find((block: { text: string }) =>
-        block.text.includes("6.5")
-      );
+      const hoursText = textBlocks.find((block: { text: string }) => block.text.includes("6.5"));
 
       expect(hoursText).toBeDefined();
     });
@@ -123,9 +121,7 @@ describe("Adaptive Cards", () => {
 
     it("should display today hours", () => {
       const card = createStatusCard(4.5, 20);
-      const columnSet = card.body.find(
-        (item: { type: string }) => item.type === "ColumnSet"
-      );
+      const columnSet = card.body.find((item: { type: string }) => item.type === "ColumnSet");
 
       expect(columnSet).toBeDefined();
       const content = JSON.stringify(columnSet);
@@ -147,7 +143,7 @@ describe("Adaptive Cards", () => {
       );
 
       expect(progressText).toBeDefined();
-      expect(progressText.text).toContain("80"); // 32/40 = 80%
+      expect(progressText!.text).toContain("80"); // 32/40 = 80%
     });
 
     it("should cap progress at 100%", () => {
@@ -157,18 +153,18 @@ describe("Adaptive Cards", () => {
           item.type === "TextBlock" && item.text?.includes("progress")
       );
 
-      expect(progressText.text).toContain("100");
+      expect(progressText!.text).toContain("100");
     });
 
     it("should include links to timesheet and reports", () => {
       const card = createStatusCard(0, 0);
 
       expect(card.actions.length).toBeGreaterThanOrEqual(2);
-      const timesheetAction = card.actions.find(
-        (action: { url?: string }) => action.url?.includes("timesheet")
+      const timesheetAction = card.actions.find((action: { url?: string }) =>
+        action.url?.includes("timesheet")
       );
-      const reportsAction = card.actions.find(
-        (action: { url?: string }) => action.url?.includes("reports")
+      const reportsAction = card.actions.find((action: { url?: string }) =>
+        action.url?.includes("reports")
       );
 
       expect(timesheetAction).toBeDefined();

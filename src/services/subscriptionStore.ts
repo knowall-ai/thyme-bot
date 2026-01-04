@@ -35,9 +35,9 @@ export class SubscriptionStore {
       try {
         await this.tableClient.createTable();
       } catch (error) {
-        // Table may already exist - ignore error
+        // Table may already exist - ignore error (409 Conflict)
         const err = error as { statusCode?: number };
-        if (err.statusCode !== 409) {
+        if (err?.statusCode !== 409) {
           console.error("Error creating subscriptions table:", error);
         }
       }
@@ -65,7 +65,7 @@ export class SubscriptionStore {
         return entity as Subscription;
       } catch (error) {
         const err = error as { statusCode?: number };
-        if (err.statusCode === 404) {
+        if (err?.statusCode === 404) {
           return null;
         }
         console.error("Error getting subscription from Azure Table:", error);
@@ -116,10 +116,7 @@ export class SubscriptionStore {
     await this.createSubscription(subscription);
   }
 
-  async getActiveSubscriptionsForTime(
-    hour: number,
-    minute: number = 0
-  ): Promise<Subscription[]> {
+  async getActiveSubscriptionsForTime(hour: number, minute: number = 0): Promise<Subscription[]> {
     const targetTime = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
     const subscriptions: Subscription[] = [];
 

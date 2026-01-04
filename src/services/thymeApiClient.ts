@@ -23,10 +23,7 @@ export class ThymeApiClient {
     this.baseUrl = config.thymeApiUrl;
   }
 
-  private async fetchWithTimeout(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<Response> {
+  private async fetchWithTimeout(url: string, options: RequestInit = {}): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 

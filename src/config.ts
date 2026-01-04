@@ -22,9 +22,25 @@ function getEnvVar(name: string, defaultValue?: string): string {
   return value || defaultValue || "";
 }
 
+// Validate bot credentials at startup to fail fast
+function validateBotCredentials(botId: string, botPassword: string): void {
+  if (!botId || !botPassword) {
+    console.warn(
+      "Warning: BOT_ID and/or BOT_PASSWORD are not set. " +
+        "The bot will not be able to authenticate with Azure Bot Service. " +
+        "This is expected during local development without tunneling."
+    );
+  }
+}
+
+const botId = getEnvVar("BOT_ID", "");
+const botPassword = getEnvVar("BOT_PASSWORD", "");
+
+validateBotCredentials(botId, botPassword);
+
 export const config: Config = {
-  botId: getEnvVar("BOT_ID", ""),
-  botPassword: getEnvVar("BOT_PASSWORD", ""),
+  botId,
+  botPassword,
   botDomain: getEnvVar("BOT_DOMAIN", ""),
   botEndpoint: getEnvVar("BOT_ENDPOINT", ""),
   thymeAppUrl: getEnvVar("THYME_APP_URL", "https://thyme.knowall.ai"),

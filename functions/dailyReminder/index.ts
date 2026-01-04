@@ -1,6 +1,10 @@
 import { AzureFunction, Context } from "@azure/functions";
 import { ReminderService } from "../../src/services/reminderService";
 
+// Initialize ReminderService at module level to optimize cold starts
+// and reuse connections across function invocations
+const reminderService = new ReminderService();
+
 /**
  * Azure Function timer trigger for daily reminders
  *
@@ -19,7 +23,6 @@ const timerTrigger: AzureFunction = async (context: Context): Promise<void> => {
   context.log(`Daily reminder function started at ${timestamp}`);
 
   try {
-    const reminderService = new ReminderService();
     const results = await reminderService.sendDailyReminders();
 
     const successful = results.filter((r) => r.success).length;

@@ -1,4 +1,4 @@
-import { TurnContext, Activity, ConversationReference, ChannelAccount } from "botbuilder";
+import { TurnContext, Activity, ChannelAccount } from "botbuilder";
 import { ThymeBot } from "../src/bot";
 
 // Mock the dependencies
@@ -9,18 +9,22 @@ describe("ThymeBot", () => {
   let bot: ThymeBot;
   let mockContext: Partial<TurnContext>;
   let mockActivity: Partial<Activity>;
-  let mockNext: jest.Mock;
 
   beforeEach(() => {
     bot = new ThymeBot();
-    mockNext = jest.fn();
 
     mockActivity = {
       type: "message",
       text: "",
       from: { id: "test-user-id", name: "Test User" } as ChannelAccount,
       recipient: { id: "bot-id", name: "Thyme Bot" } as ChannelAccount,
-      conversation: { id: "conv-id", tenantId: "tenant-id" },
+      conversation: {
+        id: "conv-id",
+        tenantId: "tenant-id",
+        isGroup: false,
+        conversationType: "personal",
+        name: "Test Conversation",
+      },
       channelId: "msteams",
       serviceUrl: "https://smba.trafficmanager.net/",
       entities: [],
@@ -58,9 +62,7 @@ describe("ThymeBot", () => {
 
       await bot.run(mockContext as TurnContext);
 
-      expect(mockContext.sendActivity).toHaveBeenCalledWith(
-        expect.stringContaining("help")
-      );
+      expect(mockContext.sendActivity).toHaveBeenCalledWith(expect.stringContaining("help"));
     });
 
     it("should handle subscribe command", async () => {
@@ -115,9 +117,7 @@ describe("ThymeBot", () => {
 
       await bot.run(mockContext as TurnContext);
 
-      expect(mockContext.sendActivity).toHaveBeenCalledWith(
-        expect.stringContaining("all set")
-      );
+      expect(mockContext.sendActivity).toHaveBeenCalledWith(expect.stringContaining("all set"));
     });
   });
 

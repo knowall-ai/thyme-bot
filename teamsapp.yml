@@ -29,7 +29,7 @@ provision:
         - path: ./infra/azure.bicep
           parameters: ./infra/azure.parameters.json
           deploymentName: Create-resources-for-thyme
-      bicepCliVersion: v0.9.1
+      bicepCliVersion: v0.24.24
 
   - uses: teamsApp/validateManifest
     with:

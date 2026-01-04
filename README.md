@@ -14,26 +14,26 @@ A Microsoft Teams bot that reminds users to fill in their timesheets at 5pm each
 
 ## Bot Commands
 
-| Command | Description |
-|---------|-------------|
-| `help` | Show available commands |
-| `subscribe` | Opt-in to daily reminders |
-| `unsubscribe` | Opt-out of reminders |
-| `status` | Show today's logged hours |
+| Command               | Description                                              |
+| --------------------- | -------------------------------------------------------- |
+| `help`                | Show available commands                                  |
+| `subscribe`           | Opt-in to daily reminders                                |
+| `unsubscribe`         | Opt-out of reminders                                     |
+| `status`              | Show today's logged hours                                |
 | `remind me at [time]` | Set a custom reminder time (e.g., `remind me at 4:30pm`) |
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Teams Toolkit |
-| Language | TypeScript |
+| Layer         | Technology                      |
+| ------------- | ------------------------------- |
+| Framework     | Teams Toolkit                   |
+| Language      | TypeScript                      |
 | Bot Framework | Microsoft Bot Framework SDK 4.x |
-| Tabs | Embedded from thyme.knowall.ai |
-| Hosting | Azure App Service |
-| Scheduling | Azure Functions Timer Trigger |
-| Storage | Azure Table Storage |
-| Auth | Microsoft Entra ID |
+| Tabs          | Embedded from thyme.knowall.ai  |
+| Hosting       | Azure App Service               |
+| Scheduling    | Azure Functions Timer Trigger   |
+| Storage       | Azure Table Storage             |
+| Auth          | Microsoft Entra ID              |
 
 ## Project Structure
 
@@ -83,6 +83,7 @@ thyme-bot/
 ### Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone <repo-url>
    cd thyme-bot
@@ -96,6 +97,7 @@ thyme-bot/
    - Teams Toolkit will provision local resources and open Teams
 
    Using CLI:
+
    ```bash
    npm run dev
    ```
@@ -107,11 +109,13 @@ thyme-bot/
 ### Deploy to Azure
 
 1. **Provision Azure resources**
+
    ```bash
    teamsapp provision --env dev
    ```
 
 2. **Deploy the application**
+
    ```bash
    teamsapp deploy --env dev
    ```
@@ -125,25 +129,25 @@ thyme-bot/
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `BOT_ID` | Azure AD App Registration ID |
-| `BOT_PASSWORD` | Azure AD App secret |
-| `BOT_DOMAIN` | Bot hosting domain |
-| `BOT_ENDPOINT` | Bot messages endpoint URL |
-| `THYME_APP_URL` | Thyme web app URL |
-| `THYME_API_URL` | Thyme API URL |
-| `AZURE_STORAGE_CONNECTION_STRING` | Storage for subscriptions |
+| Variable                          | Description                  |
+| --------------------------------- | ---------------------------- |
+| `BOT_ID`                          | Azure AD App Registration ID |
+| `BOT_PASSWORD`                    | Azure AD App secret          |
+| `BOT_DOMAIN`                      | Bot hosting domain           |
+| `BOT_ENDPOINT`                    | Bot messages endpoint URL    |
+| `THYME_APP_URL`                   | Thyme web app URL            |
+| `THYME_API_URL`                   | Thyme API URL                |
+| `AZURE_STORAGE_CONNECTION_STRING` | Storage for subscriptions    |
 
 ### Tabs Configuration
 
 The app includes three tabs that embed the Thyme web application:
 
-| Tab | URL |
-|-----|-----|
+| Tab       | URL                                |
+| --------- | ---------------------------------- |
 | Timesheet | https://thyme.knowall.ai/timesheet |
-| Timer | https://thyme.knowall.ai/timer |
-| Reports | https://thyme.knowall.ai/reports |
+| Timer     | https://thyme.knowall.ai/timer     |
+| Reports   | https://thyme.knowall.ai/reports   |
 
 ## Architecture
 
@@ -176,10 +180,10 @@ Subscriptions are stored in Azure Table Storage:
 ```typescript
 interface Subscription {
   partitionKey: "subscriptions";
-  rowKey: string;              // User ID
-  userPrincipalName: string;   // Email
-  timezone: string;            // e.g., "Europe/London"
-  reminderTime: string;        // e.g., "17:00"
+  rowKey: string; // User ID
+  userPrincipalName: string; // Email
+  timezone: string; // e.g., "Europe/London"
+  reminderTime: string; // e.g., "17:00"
   isActive: boolean;
   conversationReference: string; // For proactive messaging
 }

@@ -1,4 +1,4 @@
-import { TurnContext, TeamsInfo, CardFactory, MessageFactory, ConversationReference } from "botbuilder";
+import { TurnContext, TeamsInfo, CardFactory, MessageFactory } from "botbuilder";
 import { SubscriptionStore } from "../services/subscriptionStore";
 
 const subscribeSuccessCard = {
@@ -119,16 +119,23 @@ export async function handleSubscribeCommand(
 }
 
 function getTimezoneFromLocale(locale: string): string {
-  // Simplified timezone mapping based on locale
+  // Best-effort timezone mapping based on locale.
+  // Note: This is a simplified heuristic. Users can customize their reminder time
+  // using "remind me at [time]" which will be interpreted in their actual timezone.
+  // For precise timezone detection, consider using Microsoft Graph API to get
+  // the user's mailbox settings or prompt users to set their timezone explicitly.
   const timezoneMap: Record<string, string> = {
     "en-GB": "Europe/London",
-    "en-US": "America/New_York",
+    "en-US": "America/Chicago", // Central time as middle-ground for US
     "en-AU": "Australia/Sydney",
+    "en-CA": "America/Toronto",
     "de-DE": "Europe/Berlin",
     "fr-FR": "Europe/Paris",
     "es-ES": "Europe/Madrid",
     "ja-JP": "Asia/Tokyo",
     "zh-CN": "Asia/Shanghai",
+    "pt-BR": "America/Sao_Paulo",
+    "en-IN": "Asia/Kolkata",
   };
 
   return timezoneMap[locale] || "UTC";

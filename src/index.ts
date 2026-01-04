@@ -12,14 +12,11 @@ const app = express();
 app.use(express.json());
 
 // Create bot framework authentication
-const botFrameworkAuth = new ConfigurationBotFrameworkAuthentication(
-  {} as ConfigurationBotFrameworkAuthenticationOptions,
-  {
-    MicrosoftAppId: config.botId,
-    MicrosoftAppPassword: config.botPassword,
-    MicrosoftAppType: "MultiTenant",
-  }
-);
+const botFrameworkAuth = new ConfigurationBotFrameworkAuthentication({
+  MicrosoftAppId: config.botId,
+  MicrosoftAppPassword: config.botPassword,
+  MicrosoftAppType: "MultiTenant",
+} as ConfigurationBotFrameworkAuthenticationOptions);
 
 // Create adapter
 const adapter = new CloudAdapter(botFrameworkAuth);

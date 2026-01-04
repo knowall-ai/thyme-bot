@@ -94,7 +94,8 @@ describe("ReminderService", () => {
       mockSubscriptionStore.getAllActiveSubscriptions = jest.fn().mockResolvedValue(mockSubs);
 
       // Replace the internal subscription store
-      (reminderService as unknown as { subscriptionStore: SubscriptionStore }).subscriptionStore = mockSubscriptionStore;
+      (reminderService as unknown as { subscriptionStore: SubscriptionStore }).subscriptionStore =
+        mockSubscriptionStore;
 
       const result = await reminderService.getSubscriptionsForCurrentHour();
 
@@ -128,13 +129,9 @@ describe("ReminderService", () => {
 
   describe("sendDailyReminders", () => {
     it("should process all eligible subscriptions", async () => {
-      const mockSubs: Subscription[] = [
-        createMockSubscription(),
-        createMockSubscription({ rowKey: "user-456" }),
-      ];
-
       mockSubscriptionStore.getAllActiveSubscriptions = jest.fn().mockResolvedValue([]);
-      (reminderService as unknown as { subscriptionStore: SubscriptionStore }).subscriptionStore = mockSubscriptionStore;
+      (reminderService as unknown as { subscriptionStore: SubscriptionStore }).subscriptionStore =
+        mockSubscriptionStore;
 
       const results = await reminderService.sendDailyReminders();
 
@@ -143,7 +140,8 @@ describe("ReminderService", () => {
 
     it("should return empty array when no subscriptions match", async () => {
       mockSubscriptionStore.getAllActiveSubscriptions = jest.fn().mockResolvedValue([]);
-      (reminderService as unknown as { subscriptionStore: SubscriptionStore }).subscriptionStore = mockSubscriptionStore;
+      (reminderService as unknown as { subscriptionStore: SubscriptionStore }).subscriptionStore =
+        mockSubscriptionStore;
 
       const results = await reminderService.sendDailyReminders();
 
@@ -154,12 +152,7 @@ describe("ReminderService", () => {
 
 describe("Subscription Timezone Handling", () => {
   it("should correctly identify 5pm in different timezones", () => {
-    const timezones = [
-      "America/New_York",
-      "Europe/London",
-      "Asia/Tokyo",
-      "Australia/Sydney",
-    ];
+    const timezones = ["America/New_York", "Europe/London", "Asia/Tokyo", "Australia/Sydney"];
 
     timezones.forEach((tz) => {
       const localTime = DateTime.now().setZone(tz);

@@ -18,7 +18,7 @@ param thymeAppUrl string = 'https://thyme.knowall.ai'
 param thymeApiUrl string = 'https://thyme.knowall.ai/api'
 
 // Storage Account for subscriptions
-resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: toLower(replace('${resourceBaseName}storage', '-', ''))
   location: location
   sku: {
@@ -33,19 +33,19 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
 }
 
 // Table Service for subscription storage
-resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2023-01-01' = {
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2023-05-01' = {
   parent: storageAccount
   name: 'default'
 }
 
 // Subscriptions table
-resource subscriptionsTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2023-01-01' = {
+resource subscriptionsTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2023-05-01' = {
   parent: tableService
   name: 'subscriptions'
 }
 
 // App Service Plan
-resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: '${resourceBaseName}-plan'
   location: location
   sku: {
@@ -59,7 +59,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
 }
 
 // App Service for Bot
-resource appService 'Microsoft.Web/sites@2023-01-01' = {
+resource appService 'Microsoft.Web/sites@2023-12-01' = {
   name: '${resourceBaseName}-bot'
   location: location
   properties: {
@@ -118,7 +118,7 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
 }
 
 // Function App for scheduled reminders
-resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
+resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
   name: '${resourceBaseName}-func'
   location: location
   kind: 'functionapp,linux'
@@ -166,7 +166,7 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
 }
 
 // Bot Service
-resource botService 'Microsoft.BotService/botServices@2022-09-15' = {
+resource botService 'Microsoft.BotService/botServices@2023-09-15' = {
   name: '${resourceBaseName}-bot-service'
   location: 'global'
   kind: 'azurebot'
@@ -183,7 +183,7 @@ resource botService 'Microsoft.BotService/botServices@2022-09-15' = {
 }
 
 // Teams Channel for Bot Service
-resource teamsChannel 'Microsoft.BotService/botServices/channels@2022-09-15' = {
+resource teamsChannel 'Microsoft.BotService/botServices/channels@2023-09-15' = {
   parent: botService
   name: 'MsTeamsChannel'
   location: 'global'

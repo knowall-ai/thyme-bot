@@ -25,14 +25,11 @@ export class ReminderService {
   private thymeClient: ThymeApiClient;
 
   constructor() {
-    const botFrameworkAuth = new ConfigurationBotFrameworkAuthentication(
-      {} as ConfigurationBotFrameworkAuthenticationOptions,
-      {
-        MicrosoftAppId: config.botId,
-        MicrosoftAppPassword: config.botPassword,
-        MicrosoftAppType: "MultiTenant",
-      }
-    );
+    const botFrameworkAuth = new ConfigurationBotFrameworkAuthentication({
+      MicrosoftAppId: config.botId,
+      MicrosoftAppPassword: config.botPassword,
+      MicrosoftAppType: "MultiTenant",
+    } as ConfigurationBotFrameworkAuthenticationOptions);
 
     this.adapter = new CloudAdapter(botFrameworkAuth);
     this.subscriptionStore = new SubscriptionStore();
