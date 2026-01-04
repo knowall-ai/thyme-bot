@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceBaseName": {
+      "value": "thyme-${{TEAMSFX_ENV}}"
+    },
+    "botId": {
+      "value": "${{BOT_ID}}"
+    },
+    "botPassword": {
+      "value": "${{SECRET_BOT_PASSWORD}}"
+    },
+    "thymeAppUrl": {
+      "value": "https://thyme.knowall.ai"
+    },
+    "thymeApiUrl": {
+      "value": "https://thyme.knowall.ai/api"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "thyme-bot-functions",
+  "version": "1.0.0",
+  "description": "Azure Functions for Thyme Bot daily reminders",
+  "main": "dist/dailyReminder/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "func start",
+    "test": "echo \"No tests configured\""
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.2.2",
+    "@azure/functions": "^3.5.1",
+    "botbuilder": "^4.22.1",
+    "luxon": "^3.4.4"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.3.7",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Teams App Locally",
+      "dependsOn": [
+        "Validate & install prerequisites",
+        "Install npm packages",
+        "Start local tunnel",
+        "Set up bot",
+        "Start application"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
+      "label": "Validate & install prerequisites",
+      "type": "teamsfx",
+      "command": "debug-check-prerequisites",
+      "presentation": {
+        "reveal": "never"
+      },
+      "args": {
+        "prerequisites": [
+          "nodejs",
+          "m365Account",
+          "devCert",
+          "portOccupancy"
+        ],
+        "portOccupancy": [3978, 9239]
+      }
+    },
+    {
+      "label": "Install npm packages",
+      "type": "shell",
+      "command": "npm install",
+      "presentation": {
+        "reveal": "never"
+      }
+    },
+    {
+      "label": "Start local tunnel",
+      "type": "teamsfx",
+      "command": "debug-start-local-tunnel",
+      "args": {
+        "type": "dev-tunnel",
+        "ports": [
+          {
+            "portNumber": 3978,
+            "protocol": "http",
+            "access": "public",
+            "writeToEnvironmentFile": {
+              "endpoint": "BOT_ENDPOINT",
+              "domain": "BOT_DOMAIN"
+            }
+          }
+        ],
+        "env": "local"
+      },
+      "isBackground": true,
+      "problemMatcher": "$teamsfx-local-tunnel-watch"
+    },
+    {
+      "label": "Set up bot",
+      "type": "teamsfx",
+      "command": "provision",
+      "args": {
+        "env": "local"
+      }
+    },
+    {
+      "label": "Start application",
+      "type": "shell",
+      "command": "npm run dev:teamsfx",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+        "pattern": [
+          {
+            "regexp": "^.*$",
+            "file": 0,
+            "location": 1,
+            "message": 2
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "restify listening to"
+        }
+      }
+    }
+  ]
+}
