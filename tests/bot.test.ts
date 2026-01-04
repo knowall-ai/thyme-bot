@@ -1,9 +1,15 @@
-import { TurnContext, Activity, ChannelAccount } from "botbuilder";
+import { TurnContext, Activity, ChannelAccount, TeamsInfo } from "botbuilder";
 import { ThymeBot } from "../src/bot";
 
-// Mock the dependencies
+// Mock the dependencies at module level
 jest.mock("../src/services/subscriptionStore");
 jest.mock("../src/services/thymeApiClient");
+
+// Mock TeamsInfo.getMember
+jest.spyOn(TeamsInfo, "getMember").mockResolvedValue({
+  id: "test-user-id",
+  userPrincipalName: "test@example.com",
+} as never);
 
 describe("ThymeBot", () => {
   let bot: ThymeBot;
@@ -67,17 +73,6 @@ describe("ThymeBot", () => {
 
     it("should handle subscribe command", async () => {
       mockActivity.text = "subscribe";
-
-      // Mock TeamsInfo
-      jest.mock("botbuilder", () => ({
-        ...jest.requireActual("botbuilder"),
-        TeamsInfo: {
-          getMember: jest.fn().mockResolvedValue({
-            id: "test-user-id",
-            userPrincipalName: "test@example.com",
-          }),
-        },
-      }));
 
       await bot.run(mockContext as TurnContext);
 
@@ -146,7 +141,7 @@ describe("ThymeBot", () => {
       await bot.run(mockContext as TurnContext);
 
       expect(mockContext.sendActivity).toHaveBeenCalledWith(
-        expect.stringContaining("couldn't understand")
+        expect.stringContaining("could not understand")
       );
     });
   });

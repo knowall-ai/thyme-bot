@@ -119,7 +119,10 @@ export class ThymeApiClient {
     }
 
     try {
-      // Get start of week (Monday)
+      // Calculate start of current ISO week (Monday)
+      // getDay() returns 0 for Sunday, 1 for Monday, etc.
+      // For Sunday (0): go back 6 days to previous Monday
+      // For other days: go back (dayOfWeek - 1) days to Monday
       const now = new Date();
       const dayOfWeek = now.getDay();
       const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;

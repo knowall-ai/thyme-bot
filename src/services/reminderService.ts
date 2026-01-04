@@ -116,7 +116,9 @@ export class ReminderService {
       const result = await this.sendReminder(subscription);
       results.push(result);
 
-      // Small delay between messages to avoid rate limiting
+      // Rate limiting delay: 100ms between messages (~600/min)
+      // Teams rate limits: ~50 messages/second per bot, but conservative for stability
+      // Consider increasing if hitting 429 errors in production logs
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
 

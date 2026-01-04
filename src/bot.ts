@@ -121,7 +121,7 @@ export class ThymeBot extends TeamsActivityHandler {
 
     if (!timeMatch) {
       await context.sendActivity(
-        "I couldn't understand that time format. Try something like: `remind me at 4:30pm` or `remind me at 16:30`"
+        "I could not understand that time format. Try something like: `remind me at 4:30pm` or `remind me at 16:30`"
       );
       return;
     }

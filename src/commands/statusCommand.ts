@@ -2,6 +2,9 @@ import { TurnContext, TeamsInfo, CardFactory, MessageFactory } from "botbuilder"
 import { createStatusCard } from "../cards/statusCard";
 import { ThymeApiClient } from "../services/thymeApiClient";
 
+// Singleton instance for efficiency
+const thymeClient = new ThymeApiClient();
+
 export async function handleStatusCommand(context: TurnContext): Promise<void> {
   try {
     // Get user information
@@ -15,7 +18,6 @@ export async function handleStatusCommand(context: TurnContext): Promise<void> {
     }
 
     // Try to get hours from Thyme API
-    const thymeClient = new ThymeApiClient();
     let hoursToday = 0;
     let hoursThisWeek = 0;
 
@@ -34,6 +36,6 @@ export async function handleStatusCommand(context: TurnContext): Promise<void> {
     await context.sendActivity(message);
   } catch (error) {
     console.error("Error in status command:", error);
-    await context.sendActivity("Sorry, I couldn't get your status. Please try again later.");
+    await context.sendActivity("Sorry, I could not get your status. Please try again later.");
   }
 }
