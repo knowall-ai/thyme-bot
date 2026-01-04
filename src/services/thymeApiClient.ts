@@ -14,11 +14,31 @@ export interface TimeEntry {
   description?: string;
 }
 
+const REQUEST_TIMEOUT_MS = 10000; // 10 seconds
+
 export class ThymeApiClient {
   private baseUrl: string;
 
   constructor() {
     this.baseUrl = config.thymeApiUrl;
+  }
+
+  private async fetchWithTimeout(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+      return response;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
 
   async getUserStatus(userEmail: string): Promise<UserStatus> {
@@ -27,13 +47,15 @@ export class ThymeApiClient {
     }
 
     try {
-      const response = await fetch(`${this.baseUrl}/users/${encodeURIComponent(userEmail)}/status`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          // Add auth headers as needed
-        },
-      });
+      const response = await this.fetchWithTimeout(
+        `${this.baseUrl}/users/${encodeURIComponent(userEmail)}/status`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -49,8 +71,11 @@ export class ThymeApiClient {
         lastEntry: data.lastEntry,
       };
     } catch (error) {
-      console.error("Error fetching user status from Thyme API:", error);
-      // Return default values if API is unavailable
+      if (error instanceof Error && error.name === "AbortError") {
+        console.error("Request timeout fetching user status from Thyme API");
+      } else {
+        console.error("Error fetching user status from Thyme API:", error);
+      }
       return { hoursToday: 0, hoursThisWeek: 0 };
     }
   }
@@ -62,7 +87,7 @@ export class ThymeApiClient {
 
     try {
       const today = new Date().toISOString().split("T")[0];
-      const response = await fetch(
+      const response = await this.fetchWithTimeout(
         `${this.baseUrl}/users/${encodeURIComponent(userEmail)}/entries?date=${today}`,
         {
           method: "GET",
@@ -82,7 +107,11 @@ export class ThymeApiClient {
       const data = await response.json();
       return data.entries || [];
     } catch (error) {
-      console.error("Error fetching time entries from Thyme API:", error);
+      if (error instanceof Error && error.name === "AbortError") {
+        console.error("Request timeout fetching today entries from Thyme API");
+      } else {
+        console.error("Error fetching time entries from Thyme API:", error);
+      }
       return [];
     }
   }
@@ -101,7 +130,7 @@ export class ThymeApiClient {
       monday.setDate(now.getDate() + diff);
       const startDate = monday.toISOString().split("T")[0];
 
-      const response = await fetch(
+      const response = await this.fetchWithTimeout(
         `${this.baseUrl}/users/${encodeURIComponent(userEmail)}/entries?startDate=${startDate}`,
         {
           method: "GET",
@@ -121,7 +150,11 @@ export class ThymeApiClient {
       const data = await response.json();
       return data.entries || [];
     } catch (error) {
-      console.error("Error fetching week entries from Thyme API:", error);
+      if (error instanceof Error && error.name === "AbortError") {
+        console.error("Request timeout fetching week entries from Thyme API");
+      } else {
+        console.error("Error fetching week entries from Thyme API:", error);
+      }
       return [];
     }
   }

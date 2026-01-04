@@ -43,7 +43,14 @@ app.get("/health", (_req: Request, res: Response) => {
 
 // Bot messages endpoint
 app.post("/api/messages", async (req: Request, res: Response) => {
-  await adapter.process(req, res, (context) => bot.run(context));
+  try {
+    await adapter.process(req, res, (context) => bot.run(context));
+  } catch (error) {
+    console.error("Error processing bot message:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
 });
 
 // Start server
